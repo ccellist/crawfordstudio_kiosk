@@ -1,0 +1,33 @@
+1. Need validation on email field so the correct directory is referenced in PhotoCopy methods.
+2. Meet Sessions (Meet->session->event->rotation->photoname)
+
+Updates on 12/18
+1. \views\html\mainTempl.php
+2. \views\ajax\Order\templates\showCartTempl.php
+3. \views\ajax\Order\templates\cartThumbnailViewTempl.php
+
+Updates on 1/3/2013
+1. \modules\StoreFront.php
+2. \includes\config.php
+
+Updates on 1/14/2013
+1. \modules\StoreFront.php
+2. \includes\config.php
+3. \includes\interfaces\Pagination.php *new file
+4. \includes\Pagination.php
+5. \includes\CrawfordPagination.php
+6. \includes\UI\PaginationNav.php
+7. \includes\UI\PaginationNavAjax.php
+8. \includes\css\master.css
+9. \views\html\mainTempl.php
+
+Updates on 1/24/2013
+1. \views\html\order\templates\showCartTempl.php
+2. \views\ajax\order\templates\showOrderSummaryTempl.php
+
+Updates on 2/7/2013
+1. \modules\Order.php
+2. \includes\SQL.php
+3. \includes\FileWriter.php
+
+------- Release 02082013 end --------

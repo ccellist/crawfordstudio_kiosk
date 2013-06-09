@@ -1,0 +1,1 @@
+<div id="mainContents">Select a meet and event on the left to view thumbnails for that event.</div>

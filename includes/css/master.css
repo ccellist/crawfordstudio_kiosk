@@ -1,0 +1,188 @@
+/* 
+    Document   : master
+    Created on : Aug 9, 2012, 9:37:53 PM
+    Author     : arturo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+body {
+    background: url("/includes/images/background.jpg");
+    font-family: arial, sans-serif;
+}
+body#showCart_page #pWest{
+    visibility: hidden;
+}
+#container {
+    background: whitesmoke;
+    margin: 0 auto;
+    width: 1060px;
+    border: #666 1px solid;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+#sidebar {
+    float: left;
+    width: 30%;
+}
+#main_panel {
+    float: left;
+}
+#pWest{
+    float: left;
+    width: 240px;
+}
+#pEast{
+    width: 185px;
+    float: left;
+}
+img.thumbnail {
+    padding: 4px;
+    cursor: pointer;
+}
+img#imgDetail {
+    margin-left: 4px;
+}
+div#buttonDiv {
+    margin: 0 auto;
+    width: 165px;
+    padding: 5px;
+}
+div#thumbnailPanel {
+    overflow: auto;
+    height: 600px;
+    margin-top: 14px;
+}
+div#mp_contents {
+    padding: 31px 0px;
+}
+div#pag_nav {
+    margin: 0 auto;
+}
+div#checkoutFormContainer {
+    background: none repeat scroll 0 0 whitesmoke;
+    margin: 88px auto;
+    padding: 15px;
+    width: 36%;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+}
+div#eventDropdown {
+    border: 1px dotted;
+    margin-bottom: 10px;
+}
+div#popupCartNotification {
+
+}
+div#div_storePrimaryNav {
+    -moz-border-top-left-radius: 5px;
+    -moz-border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+div.label {
+    width: 200px;
+}
+div.thumbnailContainer{
+    float:left;
+    margin-right: 4px;
+    margin-top: 4px;
+    height: 215px;
+    width: 172px;
+}
+div.navbar a {
+    text-decoration: none;
+}
+div.thumbnail {
+    margin: 0 auto;
+    width: 80%;
+}
+div.buttonBar {
+    width: 455px;
+    margin: 7px;
+}
+.sidebar {
+    list-style: none;
+}
+.left {
+    float: left;
+}
+iframe#orderSummary{
+    width: 190px;
+    height:300px;
+    border: none;
+}
+div#orderDetails{
+    width: 180px;
+    height:480px;
+    padding-left: 14px;
+    font-size: 14px;
+}
+div#mainContents{
+    min-height: 600px;
+    min-width: 569px;
+}
+div#orderSummary {
+    margin-top: 42px;
+    max-height: 600px;
+    overflow: auto;
+    position: fixed;
+    min-width: 224px;
+}
+div > ol {
+    padding-left: 25px;
+}
+div#store_sb {
+    margin-top: 20px;
+    position: fixed;
+}
+#popupHeader {
+    background-color: #76507f;
+    background: none repeat scroll 0 0 transparent;
+    padding: 1px 10px;
+}
+form#checkout {
+    margin: 8px auto 0;
+    padding: 0;
+    width: 437px;
+}
+.popup {
+    background: none repeat scroll 0 0;
+    background-color: #B999C2;
+    border: 1px dotted black;
+    height: 200px;
+    left: 400px;
+    margin: auto;
+    opacity: 0;
+    padding: 10px;
+    position: absolute;
+    top: 150px;
+    visibility: hidden;
+    width: 200px;
+    z-index: 60;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    position: fixed;
+}
+.link {
+    cursor: pointer;
+}
+table {
+    border: 1px inset;
+}
+td, th {
+    padding-right: 23px;
+}
+tr.alt {
+    background:gainsboro;
+}
+span#currPage{
+    font-weight: 600;
+    font-color: black;
+}
+#chkBuyAll{
+    margin-left: 100px;
+}
