@@ -16,6 +16,8 @@ class MeetEventServiceTest extends PHPUnit_Framework_Testcase {
         $meetEvent = $this->meetEventService->getMeetEvent(1, 2);
         $this->assertEquals("Test Meet 1", $meetEvent->meetName);
         $this->assertEquals("Bars", $meetEvent->eventName);
+        $this->assertEquals("Session 1", $meetEvent->sessionName);
+        $this->assertEquals(1, $meetEvent->sessionId);
         $this->assertEquals(2, $meetEvent->eventId);
         $this->assertEquals(10, $meetEvent->id);
         $this->assertEquals(2, count($meetEvent->eventPhotos));
@@ -54,6 +56,7 @@ class MeetEventServiceTest extends PHPUnit_Framework_Testcase {
         $meetEvents = $this->meetEventService->getEventsAllRotationsForMeetById(1, 2);
         $this->assertEquals(1, count($meetEvents));
         $this->assertEquals(2, count($meetEvents[0]->eventPhotos));
+        $this->assertEquals("Session 1", $meetEvents[0]->sessionName);
         $this->assertEquals("Vault", $meetEvents[0]->eventName);
         $this->assertEquals("Test Meet 2", $meetEvents[0]->meetName);
         $this->assertNotNull($meetEvents[0]->rotation);
@@ -75,6 +78,7 @@ class MeetEventServiceTest extends PHPUnit_Framework_Testcase {
         $this->assertEquals(2, count($meetEvents[0]->eventPhotos));
         $this->assertEquals("Vault", $meetEvents[0]->eventName);
         $this->assertEquals("Test Meet 2", $meetEvents[0]->meetName);
+        $this->assertEquals("Session 1", $meetEvents[0]->sessionName);
     }
 
 }

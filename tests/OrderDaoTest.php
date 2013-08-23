@@ -19,7 +19,7 @@ class OrderDaoTest extends PHPUnit_Framework_Testcase {
         $custId = $this->customerId;
         $sql1 = "insert into orders (customer_id, order_subtotal, order_discount, order_taxamt, order_saletotal) " .
                 "values ($custId, 3.0000, 0.0000, 0.1500, 3.1500)";
-        $testOrders = $orderService->getOrdersByCustomerEmail("test@email.com");
+        $testOrders = $orderService->getOrdersByCustomerEmail("DSC000@email.com");
         $testOrder = $testOrders[0];
         $photoDao = new PhotoDao();
         $photo1 = $photoDao->getPhotoById(1);
@@ -81,7 +81,7 @@ class OrderDaoTest extends PHPUnit_Framework_Testcase {
         $sql = "insert into orders_archive (customer_id, customer_fname, " .
                 "customer_lname, customer_email_address, customer_primary_phone, " .
                 "order_subtotal, order_discount, order_taxamt, order_saletotal, " .
-                "order_num_items) values (1, 'Test', 'Customer', 'test@email.com', " .
+                "order_num_items) values (1, 'Test', 'Customer', 'DSC000@email.com', " .
                 "'', 6.0000, 1.0000, 0.2500, 5.2500, 2)";
         $this->assertEquals($sql, $this->orderDao->saveOrderToArchive($order));
     }
@@ -96,7 +96,7 @@ class OrderDaoTest extends PHPUnit_Framework_Testcase {
 
         $this->assertEquals("Test", $archivedOrders[0]->customerFName);
         $this->assertEquals("Customer", $archivedOrders[0]->customerLName);
-        $this->assertEquals("test@email.com", $archivedOrders[0]->customerEmail);
+        $this->assertEquals("DSC000@email.com", $archivedOrders[0]->customerEmail);
         $this->assertEquals("", $archivedOrders[0]->customerPrimaryPhone);
         $this->assertEquals(99, $archivedOrders[0]->orderId);
         $this->assertEquals(6.0000, $archivedOrders[0]->orderSubtotal);
@@ -107,12 +107,12 @@ class OrderDaoTest extends PHPUnit_Framework_Testcase {
     }
 
     public function testGetArchivedOrdersByCustomerEmail() {
-        $archivedOrders = $this->orderDao->getArchivedOrdersByCustomerEmail("test@email.com");
+        $archivedOrders = $this->orderDao->getArchivedOrdersByCustomerEmail("DSC000@email.com");
         $this->assertEquals(2, count($archivedOrders));
 
         $this->assertEquals("Test", $archivedOrders[0]->customerFName);
         $this->assertEquals("Customer", $archivedOrders[0]->customerLName);
-        $this->assertEquals("test@email.com", $archivedOrders[0]->customerEmail);
+        $this->assertEquals("DSC000@email.com", $archivedOrders[0]->customerEmail);
         $this->assertEquals("", $archivedOrders[0]->customerPrimaryPhone);
         $this->assertEquals(99, $archivedOrders[0]->orderId);
         $this->assertEquals(6.0000, $archivedOrders[0]->orderSubtotal);
@@ -132,7 +132,7 @@ class OrderDaoTest extends PHPUnit_Framework_Testcase {
 
         $this->assertEquals("Test", $archivedOrders[0]->customerFName);
         $this->assertEquals("Customer", $archivedOrders[0]->customerLName);
-        $this->assertEquals("test@email.com", $archivedOrders[0]->customerEmail);
+        $this->assertEquals("DSC000@email.com", $archivedOrders[0]->customerEmail);
         $this->assertEquals("", $archivedOrders[0]->customerPrimaryPhone);
         $this->assertEquals(99, $archivedOrders[0]->orderId);
         $this->assertEquals(6.0000, $archivedOrders[0]->orderSubtotal);
@@ -147,7 +147,7 @@ class OrderDaoTest extends PHPUnit_Framework_Testcase {
 
         $this->assertEquals("Test", $archivedOrder->customerFName);
         $this->assertEquals("Customer", $archivedOrder->customerLName);
-        $this->assertEquals("test@email.com", $archivedOrder->customerEmail);
+        $this->assertEquals("DSC000@email.com", $archivedOrder->customerEmail);
         $this->assertEquals("", $archivedOrder->customerPrimaryPhone);
         $this->assertEquals(99, $archivedOrder->orderId);
         $this->assertEquals(6.0000, $archivedOrder->orderSubtotal);

@@ -17,7 +17,7 @@ class GymMeetServiceTest extends PHPUnit_Framework_Testcase{
         $this->assertTrue($meet instanceof GymMeet);
         $this->assertEquals("Test Meet 1", $meet->meetName);
         $this->assertEquals(1, $meet->meetId);
-        $this->assertEquals(4, count($meet->meetEvents));
+        $this->assertEquals(10, count($meet->meetEvents));
     }
     
     public function testGetMeetByIdNull(){

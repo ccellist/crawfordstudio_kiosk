@@ -13,8 +13,10 @@ class MeetEventDao extends Dao {
             $rec = $res[0];
             $meetEvent = new MeetEvent($rec['event_name']);
             $meetEvent->meetId = $rec['meet_id'];
+            $meetEvent->sessionId =$rec['session_id'];
             $meetEvent->eventId = $rec['event_id'];
             $meetEvent->rotation = new Rotation($rec['rotation_id'], null);
+            $meetEvent->sessionName = $rec['session_name'];
             $meetEvent->eventName = $rec['event_name'];
             $meetEvent->meetName = $rec['meet_name'];
             $meetEvent->id = $rec['uid'];
@@ -34,6 +36,8 @@ class MeetEventDao extends Dao {
                 $meetEvent->id = $record['uid'];
                 $meetEvent->rotation = new Rotation($record['rotation_id'], null);
                 $meetEvent->eventId = $record['event_id'];
+                $meetEvent->sessionId = $record['session_id'];
+                $meetEvent->sessionName = $record['session_name'];
                 $meetEvent->meetName = $record['meet_name'];
                 $meetEventList[] = $meetEvent;
             }
@@ -52,7 +56,9 @@ class MeetEventDao extends Dao {
                 $meetEvent = new MeetEvent($rec['event_name']);
                 $meetEvent->meetId = $rec['meet_id'];
                 $meetEvent->eventId = $rec['event_id'];
+                $meetEvent->sessionId = $rec['session_id'];
                 $meetEvent->rotation = new Rotation($rec['rotation_id'], null);
+                $meetEvent->sessionName = $rec['session_name'];
                 $meetEvent->eventName = $rec['event_name'];
                 $meetEvent->meetName = $rec['meet_name'];
                 $meetEvent->id = $rec['uid'];
@@ -90,6 +96,8 @@ class MeetEventDao extends Dao {
         if ($res != null) {
             $meetEvent = new MeetEvent($res[0]['event_name']);
             $meetEvent->eventId = $res[0]['event_id'];
+            $meetEvent->sessionId = $res[0]['session_id'];
+            $meetEvent->sessionName = $res[0]['session_name'];
             $meetEvent->eventName = $res[0]['event_name'];
             $meetEvent->meetId = $res[0]['meet_id'];
             $meetEvent->meetName = $res[0]['meet_name'];

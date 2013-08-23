@@ -15,6 +15,7 @@ class MeetEventDaoTest extends PHPUnit_Framework_Testcase{
     public function testGetMeetEventById(){
         $meetEvent = $this->meetEventDao->getMeetEventById(6);
         $this->assertEquals(1, $meetEvent->meetId);
+        $this->assertEquals(1, $meetEvent->sessionId);
         $this->assertEquals(3, $meetEvent->eventId);
         $this->assertEquals(3, $meetEvent->rotation->getRotationId());
         $this->assertEquals("Test Meet 1", $meetEvent->meetName);
@@ -25,11 +26,13 @@ class MeetEventDaoTest extends PHPUnit_Framework_Testcase{
         $meetEvents = $this->meetEventDao->getEventsByMeetId(3);
         $this->assertEquals(4, count($meetEvents));
         $this->assertEquals("Test Meet 3", $meetEvents[0]->meetName);
+        $this->assertEquals("Session 1", $meetEvents[0]->sessionName);
         $this->assertEquals("Vault", $meetEvents[0]->eventName);
         $this->assertEquals(1, $meetEvents[0]->eventId);
         $this->assertEquals(1, $meetEvents[0]->rotation->getRotationId());
         
         $this->assertEquals("Test Meet 3", $meetEvents[1]->meetName);
+        $this->assertEquals("Session 1", $meetEvents[1]->sessionName);
         $this->assertEquals("Bars", $meetEvents[1]->eventName);
         $this->assertEquals(2, $meetEvents[1]->eventId);
         $this->assertEquals(1, $meetEvents[1]->rotation->getRotationId());
@@ -57,11 +60,15 @@ class MeetEventDaoTest extends PHPUnit_Framework_Testcase{
         $this->assertEquals(10, count($meetEvents));
         $this->assertEquals("Test Meet 1", $meetEvents[0]->meetName);
         $this->assertEquals("Vault", $meetEvents[0]->eventName);
+        $this->assertEquals("Session 1", $meetEvents[0]->sessionName);
         $this->assertEquals(1, $meetEvents[0]->eventId);
+        $this->assertEquals(1, $meetEvents[0]->sessionId);
         $this->assertEquals(2, $meetEvents[0]->rotation->getRotationId());
         
         $this->assertEquals("Test Meet 1", $meetEvents[1]->meetName);
         $this->assertEquals("Vault", $meetEvents[1]->eventName);
+        $this->assertEquals("Session 1", $meetEvents[1]->sessionName);
+        $this->assertEquals(1, $meetEvents[1]->sessionId);
         $this->assertEquals(1, $meetEvents[1]->eventId);
         $this->assertEquals(1, $meetEvents[1]->rotation->getRotationId());
     }
@@ -77,6 +84,8 @@ class MeetEventDaoTest extends PHPUnit_Framework_Testcase{
         $this->assertTrue($meetEvent instanceof MeetEvent);
         $this->assertEquals("Test Meet 1", $meetEvent->meetName);
         $this->assertEquals("Vault", $meetEvent->eventName);
+        $this->assertEquals("Session 1", $meetEvent->sessionName);
+        $this->assertEquals(1, $meetEvent->sessionId);
         $this->assertEquals(1, $meetEvent->id);
         $this->assertEquals(1, $meetEvent->rotation->getRotationId());
     }

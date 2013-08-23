@@ -13,9 +13,9 @@ class PhotoServiceTest extends PHPUnit_Framework_Testcase{
     }
     
     public function testGetPhotoById(){
-        $testName = "test1.jpg";
+        $testName = "DSC00001.JPG";
         $testUri = "c:\\testpics";
-        $testPrice = 24.99;
+        $testPrice = 3.0000;
         $testOrientation = Photo::LANDSCAPE;
         $testPhoto = new Photo($testName, $testUri, $testPrice, $testOrientation);
         
@@ -33,7 +33,7 @@ class PhotoServiceTest extends PHPUnit_Framework_Testcase{
     }
     
     public function testGetPhotoPriceById(){
-        $testPrice = 24.99;
+        $testPrice = 3.0000;
         $this->assertEquals($testPrice, $this->photoService->getPhotoPriceById(1));
     }
     
@@ -88,12 +88,12 @@ class PhotoServiceTest extends PHPUnit_Framework_Testcase{
     
     public function testGetPhotosByMeetEventId(){
         $testCount = 2;
-        $photoArray  = $this->photoService->getPhotosByMeetEventId(6);
+        $photoArray  = $this->photoService->getPhotosByMeetEventId(1);
         $this->assertEquals($testCount, count($photoArray));
         
-        $testName = "test12.jpg";
+        $testName = "DSC00001.JPG";
         $testUri = "c:\\testpics";
-        $testPrice = 24.99;
+        $testPrice = 3.0000;
         $testOrientation = Photo::LANDSCAPE;
         $testPhoto = new Photo($testName, $testUri, $testPrice, $testOrientation);
         $photo = $photoArray[0];

@@ -32,6 +32,6 @@ class OrderItemDaoTest extends PHPUnit_Framework_Testcase{
         $this->assertTrue($photo instanceof Photo);
         $this->assertNotNull($photo);
         $this->assertEquals("c:\\testpics", $photo->photoUri);
-        $this->assertEquals("test1.jpg", $photo->photoName);
+        $this->assertEquals("DSC00001.JPG", $photo->photoName);
     }
 }

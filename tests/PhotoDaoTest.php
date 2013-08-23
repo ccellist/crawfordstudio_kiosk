@@ -13,10 +13,10 @@ class PhotoDaoTest extends PHPUnit_Framework_Testcase {
     }
 
     public function testGetPhotosByMeetEventId() {
-        $testName = "test1.jpg";
-        $testThumbnail = "test1_tn.jpg";
+        $testName = "DSC00001.JPG";
+        $testThumbnail = "DSC00001_tn.jpg";
         $testUri = "c:\\testpics";
-        $testPrice = 3.00;
+        $testPrice = 3.0000;
         $testOrientation = Photo::LANDSCAPE;
         $testPhoto = new Photo($testName, $testUri, $testPrice, $testOrientation);
         $testPhoto->photoThumbnail = $testThumbnail;
@@ -41,8 +41,8 @@ class PhotoDaoTest extends PHPUnit_Framework_Testcase {
     }
 
     public function testGetPhotoById() {
-        $testName = "test1.jpg";
-        $testThumbnail = "test1_tn.jpg";
+        $testName = "DSC00001.JPG";
+        $testThumbnail = "DSC00001_tn.jpg";
         $testUri = "c:\\testpics";
         $testPrice = 3.00;
         $testOrientation = Photo::LANDSCAPE;

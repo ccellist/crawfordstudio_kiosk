@@ -19,7 +19,7 @@ class CustomerServiceTest extends PHPUnit_Framework_Testcase{
         $this->assertTrue($customer instanceof Customer);
         $this->assertEquals("Test", $customer->firstName);
         $this->assertEquals("Customer", $customer->lastName);
-        $this->assertEquals("test@email.com", $customer->email);
+        $this->assertEquals("DSC000@email.com", $customer->email);
     }
     
     public function testGetCustomerByIdNull(){
@@ -28,26 +28,26 @@ class CustomerServiceTest extends PHPUnit_Framework_Testcase{
     }
     
     public function testGetCustomerByEmail(){
-        $customer = $this->customerService->getCustomerByEmail("test@email.com");
+        $customer = $this->customerService->getCustomerByEmail("DSC000@email.com");
         $this->assertTrue($customer instanceof Customer);
         $this->assertEquals("Test", $customer->firstName);
         $this->assertEquals("Customer", $customer->lastName);
-        $this->assertEquals("test@email.com", $customer->email);
+        $this->assertEquals("DSC000@email.com", $customer->email);
     }
     
     public function testGetCustomerByEmailNull(){
-        $customer = $this->customerService->getCustomerByEmail("test9@email.com");
+        $customer = $this->customerService->getCustomerByEmail("DSC0009@email.com");
         $this->assertNull($customer);
     }
     
     public function testGetCustomers(){
         $customersArray = $this->customerService->getCustomers();
-        $this->assertEquals(3, count($customersArray));
+        $this->assertEquals(7, count($customersArray));
         $this->assertTrue($customersArray[0] instanceof Customer);
         $this->assertEquals(1, $customersArray[0]->customerId);
         $this->assertEquals("Test", $customersArray[0]->firstName);
         $this->assertEquals("Customer", $customersArray[0]->lastName);
-        $this->assertEquals("test@email.com", $customersArray[0]->email);
+        $this->assertEquals("DSC000@email.com", $customersArray[0]->email);
     }
 }
 

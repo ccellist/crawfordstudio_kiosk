@@ -1,6 +1,6 @@
 <?php
 abstract class AppObject {    
-    abstract public function __construct();
+//    abstract public function __construct();
     abstract public function __get($name);
     abstract public function __set($name, $value);
 //    

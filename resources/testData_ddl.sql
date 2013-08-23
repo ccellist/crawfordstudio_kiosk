@@ -61,21 +61,32 @@ create table photos(
     orient_portrait tinyint(1) default 0
 ) Engine=InnoDB;
 
+create table gym_meets (
+    uid int auto_increment not null primary key,
+    meet_name varchar(100) not null
+) Engine=InnoDB;
+
 create table event_lookup (
     uid int auto_increment not null primary key,
     event_name varchar(40) not null
 ) Engine=InnoDB;
 
-create table meet_events (
-    uid int auto_increment not null primary key,
-    meet_id int not null,
-    event_id int not null,
-    rotation_id int not null
-) Engine=InnoDB;
-
 create table rotations (
     uid int auto_increment not null primary key,
     rotation_name varchar(40)
+) Engine=InnoDB;
+
+create table sessions (
+    uid int auto_increment not null primary key,
+    session_name varchar(40)
+) Engine=InnoDB;
+
+create table meet_events (
+    uid int auto_increment not null primary key,
+    meet_id int not null,
+    session_id int not null,
+    event_id int not null,
+    rotation_id int not null
 ) Engine=InnoDB;
 
 create table orders(
@@ -119,11 +130,6 @@ create table customers(
     primary_phone varchar(25)
 ) Engine=InnoDB;
 
-create table gym_meets (
-    uid int auto_increment not null primary key,
-    meet_name varchar(100) not null
-) Engine=InnoDB;
-
 create table pricing_rules ( 
     uid integer auto_increment primary key, 
     qty_threshold integer not null, 
@@ -148,6 +154,10 @@ add constraint fk_photoId foreign key (photo_id)
 references photos(uid);
 
 alter table meet_events
+add constraint fk_sessionId foreign key (session_id)
+references sessions(uid);
+
+alter table meet_events
 add constraint fk_meetId foreign key (meet_id)
 references gym_meets(uid);
 
@@ -161,11 +171,12 @@ references rotations(uid);
 
 create VIEW `events_by_meet_view` AS 
 select 
-`me`.`uid` AS `uid`,`me`.`meet_id` AS `meet_id`,`me`.`event_id` AS `event_id`, `rot`.`rotation_name` as `rotation_name`,
-`gm`.`meet_name` AS `meet_name`,`el`.`event_name` AS `event_name` 
+`me`.`uid` AS `uid`,`me`.`meet_id` AS `meet_id`,`me`.`event_id` AS `event_id`, `rot`.`uid` AS `rotation_id`, `rot`.`rotation_name` as `rotation_name`,
+`gm`.`meet_name` AS `meet_name`,`el`.`event_name` AS `event_name`, `ses`.`uid` AS `session_id`, `ses`.`session_name` AS `session_name` 
 from ((`gym_meets` `gm` join `meet_events` `me` on((`me`.`meet_id` = `gm`.`uid`))) 
 join `event_lookup` `el` on((`el`.`uid` = `me`.`event_id`))
-join `rotations` `rot` on((`rot`.`uid` = `me`.`rotation_id`))) 
+join `rotations` `rot` on((`rot`.`uid` = `me`.`rotation_id`))
+join `sessions` `ses` on((`ses`.`uid` = `me`.`session_id`))) 
 order by `me`.`meet_id`,`me`.`event_id`;
 
 create view orders_by_customer_view as 
@@ -180,6 +191,8 @@ insert into gym_meets (meet_name) values ('Test Meet 1');
 insert into gym_meets (meet_name) values ('Test Meet 2');
 insert into gym_meets (meet_name) values ('Test Meet 3');
 
+insert into sessions (session_name) values ('Session 1');
+
 insert into event_lookup (event_name) values ('Vault');
 insert into event_lookup (event_name) values ('Bars');
 insert into event_lookup (event_name) values ('Floor');
@@ -188,233 +201,251 @@ insert into event_lookup (event_name) values ('Beam');
 insert into rotations (rotation_name) values ('Morning A'),
 ('Morning B'), ('Morning C');
 
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Vault'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Vault'),
 (select uid from rotations where rotation_name = 'Morning B')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Vault'),
 (select uid from rotations where rotation_name = 'Morning C')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Floor'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Floor'),
 (select uid from rotations where rotation_name = 'Morning B')
 ;
 
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Floor'),
 (select uid from rotations where rotation_name = 'Morning C')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Beam'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Beam'),
 (select uid from rotations where rotation_name = 'Morning B')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Beam'),
 (select uid from rotations where rotation_name = 'Morning C')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 1'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Bars'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 2'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Vault'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 2'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Floor'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 2'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Beam'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 2'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Bars'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
 
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 3'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Vault'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 3'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Floor'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 3'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Beam'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
-insert into meet_events (meet_id, event_id, rotation_id)
+insert into meet_events (meet_id, session_id, event_id, rotation_id)
 select 
 (select uid from gym_meets where meet_name = 'Test Meet 3'),
+(select uid from sessions where session_name = 'Session 1'),
 (select uid from event_lookup where event_name = 'Bars'),
 (select uid from rotations where rotation_name = 'Morning A')
 ;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Vault' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where s.uid = m.session_id and l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and s.session_name = 'Session 1' and l.event_name = 'Vault' and m.rotation_id = 1),
 'DSC00001.JPG','DSC00001_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Vault' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where s.uid = m.session_id and l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and s.session_name = 'Session 1' and l.event_name = 'Vault' and m.rotation_id = 1),
 'DSC00002.JPG','DSC00002_tn.JPG','c:\\testpics',3.00,1;
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Vault' and m.rotation_id = 2),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where s.uid = m.session_id and l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and s.session_name = 'Session 1' and l.event_name = 'Vault' and m.rotation_id = 2),
 'DSC00017.JPG','DSC00017_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Vault' and m.rotation_id = 2),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where s.uid = m.session_id and l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and s.session_name = 'Session 1' and l.event_name = 'Vault' and m.rotation_id = 2),
 'DSC00018.JPG','DSC00018_tn.JPG','c:\\testpics',3.00,1;
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Vault' and m.rotation_id = 3),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where s.uid = m.session_id and l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and s.session_name = 'Session 1' and l.event_name = 'Vault' and m.rotation_id = 3),
 'DSC00019.JPG','DSC00019_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Vault' and m.rotation_id = 3),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where s.uid = m.session_id and l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and s.session_name = 'Session 1' and l.event_name = 'Vault' and m.rotation_id = 3),
 'DSC00020.JPG','DSC00020_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name, photo_uri, photo_price)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Bars' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Bars' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00003.JPG','DSC00003_tn.JPG','c:\\testpics',3.00;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Bars' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Bars' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00004.JPG','DSC00004_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 2),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 2 and s.session_name = 'Session 1'),
 'DSC00021.JPG','DSC00021_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name, photo_uri, photo_price)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 2),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 2 and s.session_name = 'Session 1'),
 'DSC00022.JPG','DSC00022_tn.JPG','c:\\testpics',3.00;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 3),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 3 and s.session_name = 'Session 1'),
 'DSC00023.JPG','DSC00023_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name, photo_uri, photo_price)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 3),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 3 and s.session_name = 'Session 1'),
 'DSC00024.JPG','DSC00024_tn.JPG','c:\\testpics',3.00;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Floor' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Floor' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00005.JPG','DSC00005_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Floor' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Floor' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00006.JPG','DSC00006_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where g.uid = m.meet_id and l.uid = m.event_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where g.uid = m.meet_id and l.uid = m.event_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00007.JPG','DSC00007_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where g.uid = m.meet_id and l.uid = m.event_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where g.uid = m.meet_id and l.uid = m.event_id and g.meet_name = 'Test Meet 1' and l.event_name = 'Beam' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00008.JPG','DSC00008_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name,photo_thumbnail_name,  photo_uri, photo_price,orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Vault' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Vault' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00009.JPG','DSC00009_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Vault' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Vault' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00010.JPG','DSC00010_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Bars' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Bars' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00016.JPG','DSC00016_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Bars' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Bars' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00015.JPG','DSC00015_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Beam' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Beam' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00014.JPG','DSC00014_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Beam' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Beam' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00013.JPG','DSC00013_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Floor' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Floor' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00012.JPG','DSC00012_tn.JPG','c:\\testpics',3.00,1;
 
 insert into photos (event_id, photo_name, photo_thumbnail_name,  photo_uri, photo_price, orient_portrait)
 select
-(select m.uid from meet_events m, gym_meets g, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Floor' and m.rotation_id = 1),
+(select m.uid from meet_events m, gym_meets g, sessions s, event_lookup l where l.uid = m.event_id and g.uid = m.meet_id and g.meet_name = 'Test Meet 2' and l.event_name = 'Floor' and m.rotation_id = 1 and s.session_name = 'Session 1'),
 'DSC00011.JPG','DSC00011_tn.JPG','c:\\testpics',3.00,1;
 
 insert into customers (first_name, last_name, email_address, primary_phone) values ('Test', 'Customer', 'DSC000@email.com', '');

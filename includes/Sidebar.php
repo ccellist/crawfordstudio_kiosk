@@ -10,7 +10,7 @@ abstract class Sidebar {
 	abstract function addItem($objSbItem);
 	abstract function printSidebar();
 	abstract function getSavedSbFrDB($intSbId);
-	abstract static function getAllSbFrDB($asObjOrHTML);
-	abstract static function delItem($intItemId);
+//	abstract static function getAllSbFrDB($asObjOrHTML);
+//	abstract static function delItem($intItemId);
 }
 ?>
