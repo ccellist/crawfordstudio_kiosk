@@ -16,19 +16,28 @@ class Mod_StoreFront extends AuthPublic implements Iface_StoreFrontModule {
     public function _default() {
         $this->data = $this->qryString;
     }
+    
+    public function getSessions(){
+        $meetId = $_POST['meetId'];
+        $meetEventService = new MeetEventService();
+        $sessionsDropdown = $meetEventService->generateMeetSessionDropdown($meetId);
+        $this->data = $sessionsDropdown;
+    }
 
     public function getEvents() {
         $meetId = $_POST['meetId'];
+        $sessionId = $_POST['sessionId'];
         $meetEventService = new MeetEventService();
-        $eventsDropdown = $meetEventService->generateMeetEventDropdown($meetId);
+        $eventsDropdown = $meetEventService->generateMeetEventDropdown($meetId, $sessionId);
         $this->data = $eventsDropdown;
     }
 
     public function getRotations() {
         $eventId = $_POST['eventId'];
         $meetId = $_POST['meetId'];
+        $sessionId = $_POST['sessionId'];
         $meetEventService = new MeetEventService();
-        $rotationDropdown = $meetEventService->generateRotationDropdown($eventId, $meetId);
+        $rotationDropdown = $meetEventService->generateRotationDropdown($eventId, $sessionId, $meetId);
         $this->data = $rotationDropdown;
     }
 

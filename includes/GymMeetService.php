@@ -30,9 +30,9 @@ class GymMeetService {
         }
     }
 
-    public function getMeetEventsByMeetId($meetId) {
+    public function getMeetSessionsByMeetId($meetId) {
         $meetEventService = new MeetEventService();
-        return $meetEventService->getEventsForMeetById($meetId);
+        return $meetEventService->getSessionsForMeetById($meetId);
     }
 
     public function getAvailableMeetEventsByGymMeetName($meetName) {
@@ -47,7 +47,7 @@ class GymMeetService {
 
     public function generateMeetDropdown() {
         $meets = $this->gymMeetDao->getAllMeets();
-        $output = "<select id=\"meetSelect\" name=\"meetSelect\" onchange=\"getMeetEvents(this.value)\">\n<option>Select a meet...</option>\n";
+        $output = "<select id=\"meetSelect\" name=\"meetSelect\" onchange=\"getMeetSessions(this.value)\">\n<option>Select a meet...</option>\n";
         foreach ($meets as $meet) {
             $output .= sprintf("<option value=%s>%s\n", $meet->meetId, $meet->meetName);
         }

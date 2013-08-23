@@ -3,10 +3,9 @@
 class MeetEvent extends AppObject {
     private $id;
     private $meetId;
-    private $sessionId;
     private $eventId;
     private $rotation;
-    private $sessionName;
+    private $meetSession;
     private $eventName;
     private $meetName;
     private $eventPhotos;

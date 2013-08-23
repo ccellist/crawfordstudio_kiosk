@@ -13,6 +13,7 @@ SessionTool::dumpSession();
 $sidebarContents = array();
 $gymMeetService = new GymMeetService();
 $sidebarContents[] = $gymMeetService->generateMeetDropdown();
+$sidebarContents[] = "<div id=\"sessionDropdown\"></div>\n";
 $sidebarContents[] = "<div id=\"eventDropdown\"></div>\n";
 $sidebarContents[] = "<div id=\"rotationList\"></div>\n";
 $session = SessionTool::getSession();
@@ -202,11 +203,37 @@ $nextButton = new UI_Button("button", "&gt;", "nextPic", "", "navButton", $event
                 photos = photos.replace(",,",",");
             }
             
-            function getMeetEvents(meet){
+            function getMeetSessions(meet){
+                $.ajax({
+                    type: 'POST',
+                    url: '/index.php?module=StoreFront&action=getSessions&view=ajax',
+                    data: { meetId: meet },
+                    beforeSend:function(){
+                        // this is where we append a loading image
+                        $('#ajax-panel').html('<div class="loading"><img src="/includes/images/loading.gif" alt="Loading..." /></div>');
+                    },
+                    success:function(data){
+                        // successful request; do something with the data
+                        $('#mainContents').empty();
+                        $('#mainContents').append("Select an event.");
+                        $('#sessionDropdown').empty();
+                        $('#sessionDropdown').append(data);
+                        var newHeight = $('#sessionDropdown').height();
+                        $('#sidebar').height(newHeight);
+                        $('#rotationList').empty();
+                    },
+                    error:function(){
+                        // failed request; give feedback to user
+                        $('#sessionDropdown').html('<p class="error"><strong>Oops!</strong> Try that again in a few moments.</p>');
+                    }
+                });
+            }
+            
+            function getMeetEvents(session, meet){
                 $.ajax({
                     type: 'POST',
                     url: '/index.php?module=StoreFront&action=getEvents&view=ajax',
-                    data: { meetId: meet },
+                    data: { meetId: meet, sessionId: session },
                     beforeSend:function(){
                         // this is where we append a loading image
                         $('#ajax-panel').html('<div class="loading"><img src="/includes/images/loading.gif" alt="Loading..." /></div>');
@@ -228,11 +255,11 @@ $nextButton = new UI_Button("button", "&gt;", "nextPic", "", "navButton", $event
                 });
             }
             
-            function getRotations(eventId, meetId){
+            function getRotations(eventId, meetId, sessionId){
                 $.ajax({
                     type: 'POST',
                     url: '/index.php?module=StoreFront&action=getRotations&view=ajax',
-                    data: { eventId: eventId, meetId: meetId },
+                    data: { eventId: eventId, meetId: meetId, sessionId: sessionId },
                     beforeSend:function(){
                         // this is where we append a loading image
                         $('#ajax-panel').html('<div class="loading"><img src="/includes/images/loading.gif" alt="Loading..." /></div>');
