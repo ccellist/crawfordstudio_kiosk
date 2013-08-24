@@ -536,6 +536,21 @@ BEGIN
         END IF;
 END%
 
+CREATE PROCEDURE GetSessionId(
+    IN sessionName varchar(40),
+    OUT sessionId int)
+
+BEGIN
+    DECLARE sessionCount int;
+    select count(uid) into @sessioncount from sessions where session_name=sessionName;
+
+    IF @sessionCount>0 THEN
+        select uid into sessionId from sessions where session_name=sessionName;
+        ELSE
+        select 0 into sessionId from sessions where 1=1 limit 1;
+        END IF;
+END%
+
 CREATE PROCEDURE GetEventId(
     IN eventName varchar(40),
     OUT eventId int)
@@ -569,16 +584,17 @@ END%
     
 CREATE PROCEDURE GetMeetEventId(
     IN meetId int,
+    IN sessionId int,
     IN eventId int,
     IN rotationId int,
     OUT meetEventId int)
 
 BEGIN
     DECLARE eventCount int;
-    select count(uid) into @eventCount from meet_events where event_id=eventId and meet_id=meetId and rotation_id=rotationId;
+    select count(uid) into @eventCount from meet_events where session_id=sessionId and event_id=eventId and meet_id=meetId and rotation_id=rotationId;
 
     IF @eventCount>0 THEN
-        select uid into meetEventId from meet_events where event_id=eventId and meet_id=meetId and rotation_id=rotationId;
+        select uid into meetEventId from meet_events where session_id=sessionId and event_id=eventId and meet_id=meetId and rotation_id=rotationId;
         ELSE
         select 0 into meetEventId from meet_events where 1=1 limit 1;
         END IF;
@@ -591,6 +607,15 @@ CREATE PROCEDURE InsertNewMeet(
 BEGIN
     INSERT INTO gym_meets (meet_name) values (meetName);
     select LAST_INSERT_ID() into meetId from gym_meets LIMIT 1;
+END%
+
+CREATE PROCEDURE InsertNewSession(
+    IN sessionName varchar(100),
+    OUT sessionId int)
+
+BEGIN
+    INSERT INTO sessions (sessino_name) values (sessionName);
+    SELECT LAST_INSERT_ID() into sessionId from sessions LIMIT 1;
 END%
 
 CREATE PROCEDURE InsertNewEvent(
@@ -614,12 +639,13 @@ END%
 
 CREATE PROCEDURE InsertNewMeetEvent(
     IN meetId int,
+    IN sessionId int,
     IN eventId int,
     IN rotationId int,
     OUT meetEventId int)
 
 BEGIN
-    INSERT INTO meet_events (meet_id, event_id, rotation_id) values (meetId, eventId, rotationId);
+    INSERT INTO meet_events (meet_id, session_id, event_id, rotation_id) values (meetId, sessionId, eventId, rotationId);
     select LAST_INSERT_ID() into meetEventId from meet_events LIMIT 1;
 END%
 
@@ -638,6 +664,7 @@ END%
 
 CREATE PROCEDURE SavePhoto(
     IN meetName varchar(100),
+    IN sessionName varchar(40),
     IN eventName varchar(40),
     IN rotationName varchar(40),
     IN photoName varchar(50),
@@ -648,6 +675,7 @@ CREATE PROCEDURE SavePhoto(
 
 BEGIN
     DECLARE meetId int default 0;
+    DECLARE sessionId int default 0;
     DECLARE eventId int default 0;
     DECLARE rotationId int default 0;
     DECLARE meetEventId int default 0;
@@ -655,6 +683,11 @@ BEGIN
     CALL GetMeetId(meetName, @meetId);
     IF @meetId=0 or @meetId is null THEN
             CALL InsertNewMeet(meetName, @meetId);
+    END IF;
+
+    CALL GetSessionId(sessionName, @sessionId);
+    IF @sessionId=0 or @sessionId is null THEN
+            CALL InsertNewSession(sessionName, @sessionId);
     END IF;
 
     CALL GetEventId(eventName, @eventId);
@@ -667,9 +700,9 @@ BEGIN
             CALL InsertNewRotation(rotationMame, @rotationId);
     END IF;
 
-    CALL GetMeetEventId(@meetId, @eventId, @rotationId, @meetEventId);
+    CALL GetMeetEventId(@meetId, @sessionId, @eventId, @rotationId, @meetEventId);
     IF @meetEventId=0 or @meetEventId is null THEN
-            CALL InsertNewMeetEvent(@meetId, @eventId, @rotationId, @meetEventId);
+            CALL InsertNewMeetEvent(@meetId, @sessionId, @eventId, @rotationId, @meetEventId);
     END IF;
 
     CALL InsertNewPhoto(@meetEventId,photoName,photoThumbnail,photoUri,photoPrice,orientPortrait);
@@ -677,25 +710,28 @@ END%
 
 CREATE PROCEDURE DeleteRotation (
     IN meetName varchar(100),
+    IN sessionName varchar(40),
     IN eventName varchar(40),
     IN rotationName varchar(40)
 )
 BEGIN
     DECLARE meetId int default 0;
+    DECLARE sessionId int default 0;
     DECLARE eventId int default 0;
     DECLARE meetEventId int default 0;
     DECLARE rotationId int default 0;
 
     CALL GetMeetId(meetName, @meetId);
+    CALL GetSessionId(sessionName, @sessionId);
     CALL GetEventId(eventName, @eventId);
     CALL GetRotationId(rotationName, @rotationId);
 
     DELETE FROM photos WHERE event_id in (
         SELECT uid FROM meet_events WHERE rotation_id = @rotationId 
-            AND meet_id = @meetId AND event_id = @eventId
+            AND meet_id = @meetId AND event_id = @eventId AND session_id = @sessionId
     );
     DELETE FROM meet_events WHERE rotation_id = @rotationId 
-            AND meet_id = @meetId AND event_id = @eventId;
+            AND meet_id = @meetId AND event_id = @eventId AND session_id = @sessionId;
 END%
 
 CREATE PROCEDURE DeleteAllMeetData()
@@ -706,6 +742,8 @@ BEGIN
     DELETE FROM photos;
     DELETE FROM meet_events;
     DELETE FROM event_lookup;
+    DELETE FROM rotations;
+    DELETE FROM sessions;
     DELETE FROM gym_meets;
 END%
 delimiter ;
