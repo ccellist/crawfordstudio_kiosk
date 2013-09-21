@@ -16,12 +16,12 @@ class ImageGd2Processor implements Iface_ImageProcessor {
 
     public function __construct($imgName, $imgType = "jpeg", $rotateAngle = 0) {
         if (strpos($imgName, DIRECTORY_SEPARATOR) !== false) {
-            $tmp = explode("\\", $imgName);
+            $tmp = explode(DIRECTORY_SEPARATOR, $imgName);
             $imgName = array_pop($tmp);
             if (DIRECTORY_SEPARATOR == "\\") {
                 self::$rel_dir = implode("\\", $tmp);
             } else {
-                self::$rel_dir = DIRECTORY_SEPARATOR . implode("\\", $tmp);
+                self::$rel_dir = DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $tmp);
             }
         } else {
             if (!isset(self::$img_dir)) {

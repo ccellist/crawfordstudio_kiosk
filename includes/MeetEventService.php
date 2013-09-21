@@ -13,7 +13,7 @@ class MeetEventService {
         if ($meetEvents != null) {
             foreach ($meetEvents as $meetEvent) {
                 $this->loadRotations($meetEvent);
-                $this->loadEventPhotos($meetEvent);
+                //$this->loadEventPhotos($meetEvent);
             }
             return $meetEvents;
         } else {

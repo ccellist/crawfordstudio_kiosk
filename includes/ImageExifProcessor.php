@@ -121,31 +121,33 @@ class ImageExifProcessor extends ImageGd2Processor {
     public static function getPhotoRotateAngle($photoUri) {
         if (file_exists($photoUri)) {
             $exif = @exif_read_data($photoUri);
-            $ort = $exif['Orientation'];
-            switch ($ort) {
-                case 1: // nothing
-                    return 0.0;
+            if (array_key_exists("Orientation", $exif)) {
+                $ort = $exif['Orientation'];
+                switch ($ort) {
+                    case 1: // nothing
+                        return 0.0;
 
-                case 2: // horizontal flip
-                    return 0.0;
+                    case 2: // horizontal flip
+                        return 0.0;
 
-                case 3: // 180 rotate left
-                    return 180.0;
+                    case 3: // 180 rotate left
+                        return 180.0;
 
-                case 4: // vertical flip
-                    return 0.0;
+                    case 4: // vertical flip
+                        return 0.0;
 
-                case 5: // vertical flip + 90 rotate right
-                    return 270.0;
+                    case 5: // vertical flip + 90 rotate right
+                        return 270.0;
 
-                case 6: // 90 rotate right
-                    return 270.0;
+                    case 6: // 90 rotate right
+                        return 270.0;
 
-                case 7: // horizontal flip + 90 rotate right
-                    return 270.0;
+                    case 7: // horizontal flip + 90 rotate right
+                        return 270.0;
 
-                case 8:    // 90 rotate left
-                   return 90.0;
+                    case 8:    // 90 rotate left
+                        return 90.0;
+                }
             }
         } else {
             return 0.0;

@@ -8,11 +8,14 @@ require_once "MemcacheTool.php";
 if (get_magic_quotes_runtime())
     set_magic_quotes_runtime(false);
 
-$memcache = MemcacheTool::getMemcache();
+if (MEMCACHED_ENABLED) {
+    $memcache = MemcacheTool::getMemcache();
 
-$flushMemcache = @$_GET['flush'];
-if ($flushMemcache == 1)
-    $memcache->flush();
+    $flushMemcache = @$_GET['flush'];
+    if ($flushMemcache == 1)
+        $memcache->flush();
+}
+
 $photoUrl = $_GET['u'];
 $rotateAngle = $_GET['r'];
 $fullSize = @$_GET['full'];
@@ -51,15 +54,23 @@ if ($fullSize == 1) {
     }
 }
 if ($rotateAngle == 0) {
-    if (($picture = $memcache->get($photoUrl . "_" . $height)) === false) {
+    if (MEMCACHED_ENABLED) {
+        if (($picture = $memcache->get($photoUrl . "_" . $height)) === false) {
+            $picture = $imageProcessor->makeThumbnail($height, $width, true);
+            $memcache->set($photoUrl . "_" . $height, $picture, false, 0);
+        }
+    } else {
         $picture = $imageProcessor->makeThumbnail($height, $width, true);
-        $memcache->set($photoUrl . "_" . $height, $picture, false, 0);
     }
 } else {
     //Assume portrait
-    if (($picture = $memcache->get($photoUrl . "_" . $width)) === false) {
+    if (MEMCACHED_ENABLED) {
+        if (($picture = $memcache->get($photoUrl . "_" . $width)) === false) {
+            $picture = $imageProcessor->makeThumbnail($width, $height, true);
+            $memcache->set($photoUrl . "_" . $width, $picture, false, 0);
+        }
+    } else {
         $picture = $imageProcessor->makeThumbnail($width, $height, true);
-        $memcache->set($photoUrl . "_" . $width, $picture, false, 0);
     }
 }
 

@@ -578,7 +578,7 @@ BEGIN
     IF @rotationCount>0 then
         select uid into rotationId from rotations where rotation_name = rotationName;
         ELSE
-        select 0 into rotationId from rotatoins where 1=1 limit 1;
+        select 0 into rotationId from rotations where 1=1 limit 1;
         END IF;
 END%    
     
@@ -614,7 +614,7 @@ CREATE PROCEDURE InsertNewSession(
     OUT sessionId int)
 
 BEGIN
-    INSERT INTO sessions (sessino_name) values (sessionName);
+    INSERT INTO sessions (session_name) values (sessionName);
     SELECT LAST_INSERT_ID() into sessionId from sessions LIMIT 1;
 END%
 
@@ -697,7 +697,7 @@ BEGIN
 
     CALL GetRotationId(rotationName, @rotationId);
     IF @rotationId=0 or @rotationId is null THEN
-            CALL InsertNewRotation(rotationMame, @rotationId);
+            CALL InsertNewRotation(rotationName, @rotationId);
     END IF;
 
     CALL GetMeetEventId(@meetId, @sessionId, @eventId, @rotationId, @meetEventId);
