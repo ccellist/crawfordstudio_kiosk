@@ -1,4 +1,4 @@
- drop database if exists admin;
+/* drop database if exists admin;
  create database admin;
  use admin;
 
@@ -8,7 +8,7 @@
    `access` datetime DEFAULT NULL,
    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+*/
 drop database if exists crawfordphoto;
 create database crawfordphoto;
 use crawfordphoto;

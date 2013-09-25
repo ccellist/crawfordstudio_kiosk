@@ -113,7 +113,7 @@ original function of the PHP.
 
 The function is tested using PHP 5.1.4 in Windows XP 
 and Apache WebServer. 
-
+*/
 function money_format($format, $number) 
 { 
     $regex  = '/%((?:[\^!\-]|\+|\(|\=.)*)([0-9]+)?'. 
@@ -199,7 +199,7 @@ function money_format($format, $number)
         $format = str_replace($fmatch[0], $value, $format); 
     } 
     return $format; 
-}  */
+}  
 
 function get_ip_list() {
     $tmp = array();
