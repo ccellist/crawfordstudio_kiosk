@@ -22,7 +22,8 @@ define("PHOTO_DESTINATION", "c:\\users\\aa94427\\Desktop\\Orders");
 define("DEFAULT_TIMEOUT", "300000");
 define("CHECKOUT_PAGE_TIMEOUT", 800);
 define("STOP_PROCESSING", 0.0);
-define("LOG_DIR", "/var/log/apache2/appLogs");
+define("LOG_DIR", "c:\wamp\logs");
+//define("LOG_DIR", "/var/log/apache2/appLogs");
 define("QUERY_LOG_FILE", "crawfordQry.log");
 
 define("MY_SERVER","127.0.0.1");
