@@ -26,7 +26,7 @@ class SessionDao extends Dao {
             $sql .= " and session_name = '$sessionName'";
         }
         $this->updsql = preg_replace("/sessions and/","sessions where", $sql);
-        $this->updsql .= " order by uid";
+        $this->updsql .= " order by session_name";
         $res = $this->retrieve();
         if ($res != null) {
             foreach ($res as $key => $val) {
