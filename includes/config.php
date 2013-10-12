@@ -25,6 +25,7 @@ define("STOP_PROCESSING", 0.0);
 define("LOG_DIR", "c:\wamp\logs");
 //define("LOG_DIR", "/var/log/apache2/appLogs");
 define("QUERY_LOG_FILE", "crawfordQry.log");
+define("DEBUG_ON",false);
 
 define("MY_SERVER","127.0.0.1");
 define("MY_DB","crawfordphoto");

@@ -9,7 +9,9 @@
  * author: Arturo Araya
  * 
  */
-SessionTool::dumpSession();
+if (DEBUG_ON) {
+    SessionTool::dumpSession();
+}
 $sidebarContents = array();
 $gymMeetService = new GymMeetService();
 $sidebarContents[] = $gymMeetService->generateMeetDropdown();
