@@ -506,6 +506,7 @@ insert into pricing_rules (qty_threshold, discount_rate) values (5, 0.3333);
 insert into pricing_rules (qty_threshold,discount_rate) values (12, 25.0000);
 
 create table kiosk_jobs( 
+    uid int auto_increment primary key,
     create_time timestamp default now(), 
     is_pending tinyint default 1, 
     command text
