@@ -186,3 +186,6 @@ span#currPage{
 #chkBuyAll{
     margin-left: 100px;
 }
+ul#ul_store_sb li div  {
+    margin-bottom:  15px;
+}
